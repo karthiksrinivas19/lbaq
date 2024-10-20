@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="styles/common.css" />
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f0f4f8;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      .profile-card {
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        margin-top: 20px;
+      }
+      .profile-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+      .profile-picture {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 20px;
+      }
+      .profile-name {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+      }
+      .profile-info {
+        margin-bottom: 20px;
+      }
+      .info-item {
+        display: flex;
+        margin-bottom: 15px;
+      }
+      .info-label {
+        font-weight: bold;
+        width: 120px;
+        color: #666;
+      }
+      .info-value {
+        flex: 1;
+        color: #333;
+      }
+      .edit-button {
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+      }
+      .edit-button:hover {
+        background-color: #2980b9;
+      }
+      .menu-icon {
+        cursor: pointer;
+        padding: 10px;
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: #3498db;
+        border-radius: 5px;
+        z-index: 1000;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="menu-icon" onclick="toggleMenu()">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+
+    <div class="container">
+      <div class="profile-card">
+        <div class="profile-header">
+          <img
+            src="https://via.placeholder.com/100"
+            alt="Profile Picture"
+            class="profile-picture"
+            id="profile-picture"
+          />
+          <h1 class="profile-name" id="name">Loading...</h1>
+        </div>
+        <div class="profile-info">
+          <div class="info-item">
+            <span class="info-label">Email:</span>
+            <span class="info-value" id="email">Loading...</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Aadhaar:</span>
+            <span class="info-value" id="aadhaar">Loading...</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Area:</span>
+            <span class="info-value" id="area">Loading...</span>
+          </div>
+        </div>
+        <button class="edit-button" onclick="editProfile()">
+          Edit Profile
+        </button>
+      </div>
+    </div>
+
+    <!-- Menu Content -->
+    <div class="menu">
+      <ul>
+        <a href="dashboard.html"
+          ><li><i class="fas fa-home"></i>Dashboard</li></a
+        >
+        <a href="query.html"
+          ><li><i class="fas fa-question-circle"></i>Create Query</li></a
+        >
+        <a href="announcements.html"
+          ><li><i class="fas fa-bullhorn"></i>Announcements</li></a
+        >
+        <a href="admin_queries.html"
+          ><li><i class="fas fa-tasks"></i>Admin Queries</li></a
+        >
+        <a href="login.html" onclick="logout()"
+          ><li><i class="fas fa-sign-out-alt"></i>Logout</li></a
+        >
+      </ul>
+    </div>
+
+    <script>
+      function loadUserProfile() {
+        fetch("https://lbaq-api.vercel.app/users/profile", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is stored
+            "Content-Type": "application/json", // Optional but good practice
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            document.getElementById("name").innerText = data.name || "N/A";
+            document.getElementById("email").innerText = data.email || "N/A";
+            document.getElementById("aadhaar").innerText =
+              data.aadhaar || "N/A";
+            document.getElementById("area").innerText = data.area || "N/A";
+
+            // Optionally handle profile picture if available
+            if (data.profilePicture) {
+              document.getElementById("profile-picture").src =
+                data.profilePicture || "https://via.placeholder.com/100";
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            alert("Failed to load user profile. Please try again.");
+          });
+      }
+
+      function toggleMenu() {
+        var menu = document.querySelector(".menu");
+        menu.classList.toggle("active");
+      }
+
+      function editProfile() {
+        // Implement edit profile functionality here
+        alert("Edit profile functionality to be implemented");
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", loadUserProfile);
+    </script>
+  </body>
+</html>

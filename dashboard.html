@@ -4,97 +4,248 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles/common.css">
     <style>
-        .dashboard-links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
-        .dashboard-link {
-            text-decoration: none;
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f4f8;
             color: #333;
-            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-            transition: background-color 0.3s ease;
         }
-        .dashboard-link:hover {
-            background-color: #e0e0e0;
+
+        .upper-section {
+            position: relative;
+            height: 200px;
+            background: linear-gradient(135deg, #3498db, #1abc9c);
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .dashboard-link i {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
+
         .profile-img {
             position: absolute;
-            top: 50%;
+            bottom: -50px;
             left: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .profile-img img {
-            width: 100px; 
+            transform: translateX(-50%);
+            width: 100px;
             height: 100px;
             border-radius: 50%;
+            border: 5px solid #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .profile-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .welcome-text {
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+            margin-top: -30px;
+        }
+
+        .dashboard-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 80px;
+        }
+
+        .dashboard-link {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-link:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dashboard-link i {
+            font-size: 36px;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+
+        .dashboard-link span {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* New styles for the menu */
+        .menu {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #ffffff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+        }
+
+        .menu.active {
+            left: 0;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 60px;
+        }
+
+        .menu ul a {
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu ul li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .menu ul li:hover {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .menu ul li i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .close-icon::before {
+            content: "\2716";
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
+        .menu-icon.active .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .menu-icon.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.active .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+
+        /* Add this new style for the profile link */
+        #profile-link {
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="upper-section">
-            <div class="circle circle1"></div>
-            <div class="circle circle2"></div>
             <div class="menu-icon" onclick="toggleMenu()">
                 <div class="bar"></div>
                 <div class="bar"></div>
                 <div class="bar"></div>
             </div>
-            <div class="close-icon" onclick="toggleMenu()"></div>
+            <div class="welcome-text">Welcome, <span id="user-name">User</span></div>
             <div class="profile-img">
-                <img src="https://via.placeholder.com/100" alt="Profile Picture">
+                <img src="https://via.placeholder.com/100" alt="Profile Picture" id="profile-picture">
             </div>
         </div>
 
-        <div class="lower-section">
-            <h1>Dashboard</h1>
-            <div class="dashboard-links">
-                <a href="query.html" class="dashboard-link">
-                    <i class="fa-solid fa-message"></i>
-                    <span>Create Query</span>
-                </a>
-                <a href="admin_queries.html" class="dashboard-link">
-                    <i class="fa-solid fa-list-alt"></i>
-                    <span>Admin Queries</span>
-                </a>
-                <a href="announcements.html" class="dashboard-link">
-                    <i class="fa-solid fa-bullhorn"></i>
-                    <span>Announcements</span>
-                </a>
-            </div>
+        <div class="dashboard-links">
+            <a href="query.html" class="dashboard-link">
+                <i class="fas fa-question-circle"></i>
+                <span>Create Query</span>
+            </a>
+            <a href="admin_queries.html" class="dashboard-link">
+                <i class="fas fa-tasks"></i>
+                <span>Admin Queries</span>
+            </a>
+            <a href="announcements.html" class="dashboard-link">
+                <i class="fas fa-bullhorn"></i>
+                <span>Announcements</span>
+            </a>
+            <a href="#" class="dashboard-link" id="profile-link" onclick="showProfile()">
+                <i class="fas fa-user"></i>
+                <span>My Profile</span>
+            </a>
         </div>
     </div>
 
-    <!-- Menu Content -->
+    <!-- Updated Menu Content -->
     <div class="menu">
+        <div class="close-icon" onclick="toggleMenu()"></div>
         <ul>
-            <a href="dashboard.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+            <a href="dashboard.html">
+                <li><i class="fas fa-home"></i>Dashboard</li>
             </a>
-            <a style="text-decoration: none;" href="query.html">
-                <li><i class="fa-solid fa-message"></i>&nbsp;&nbsp;Create Query</li>
+            <a href="query.html">
+                <li><i class="fas fa-question-circle"></i>Create Query</li>
             </a>
-            <a href="announcements.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
+            <a href="announcements.html">
+                <li><i class="fas fa-bullhorn"></i>Announcements</li>
             </a>
-            <a href="admin_queries.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
+            <a href="admin_queries.html">
+                <li><i class="fas fa-tasks"></i>Admin Queries</li>
             </a>
-            <a style="text-decoration: none;" href="login.html">
-                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
+            <a href="profile.html">
+                <li><i class="fas fa-user"></i>My Profile</li>
+            </a>
+            <a href="login.html" onclick="logout()">
+                <li><i class="fas fa-sign-out-alt"></i>Logout</li>
             </a>
         </ul>
     </div>
@@ -102,12 +253,11 @@
     <script>
         function toggleMenu() {
             var menu = document.querySelector('.menu');
-            var closeIcon = document.querySelector('.close-icon');
+            var menuIcon = document.querySelector('.menu-icon');
             menu.classList.toggle('active');
-            closeIcon.classList.toggle('active');
+            menuIcon.classList.toggle('active');
         }
 
-        // Add this function to load user data
         function loadUserData() {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -126,9 +276,10 @@
                 if (data.error) {
                     throw new Error(data.message);
                 }
-                // Update the dashboard with user data
-                document.querySelector('h1').textContent = `Welcome, ${data.name}`;
-                // You can add more user data to the dashboard as needed
+                document.getElementById('user-name').textContent = data.name;
+                if (data.profilePicture) {
+                    document.getElementById('profile-picture').src = data.profilePicture;
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
@@ -137,7 +288,16 @@
             });
         }
 
-        // Call loadUserData when the page loads
+        function showProfile() {
+            // Redirect to the profile page
+            window.location.href = 'profile.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
         document.addEventListener('DOMContentLoaded', loadUserData);
     </script>
 </body>
