@@ -122,12 +122,109 @@
                 left: -15%;
             }
         }
+
+        /* New styles for the menu */
+        .menu {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            width: 250px;
+            height: 100%;
+            background-color: #ffffff;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+        }
+
+        .menu.active {
+            left: 0;
+        }
+
+        .menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 60px;
+        }
+
+        .menu ul a {
+            text-decoration: none;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .menu ul li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .menu ul li:hover {
+            background-color: rgb(22, 170, 197);
+            color: white;
+        }
+
+        .menu ul li i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .close-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .close-icon::before {
+            content: "\2716";
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 10px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background-color: rgb(22, 170, 197);
+            border-radius: 5px;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px 0;
+            transition: 0.4s;
+        }
+
+        .menu-icon.active .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .menu-icon.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-icon.active .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
     </style>
 </head>
 
 <body>
     <div class="circle circle1"></div>
     <div class="circle circle2"></div>
+    <div class="menu-icon" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
     <div class="container">
         <img src="./images/firstpage.svg" alt="Character Image">
         <div class="header">Government of India</div>
@@ -136,6 +233,28 @@
         </div>
         <a href="signup.html"><button id="getStartBtn" class="rect-button">Get Started</button></a>
     </div>
+
+    <!-- Updated Menu Content -->
+    <div class="menu">
+        <div class="close-icon" onclick="toggleMenu()"></div>
+        <ul>
+            <a href="signup.html">
+                <li><i class="fa-solid fa-user-plus"></i>Sign Up</li>
+            </a>
+            <a href="login.html">
+                <li><i class="fa-solid fa-sign-in-alt"></i>Login</li>
+            </a>
+        </ul>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.querySelector('.menu');
+            var menuIcon = document.querySelector('.menu-icon');
+            menu.classList.toggle('active');
+            menuIcon.classList.toggle('active');
+        }
+    </script>
 </body>
 
 </html>
