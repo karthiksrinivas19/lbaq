@@ -1,184 +1,227 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Create Query</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="styles/common.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script
+      src="https://kit.fontawesome.com/2460ed1eda.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="styles/common.css" />
     <style>
-        .query-form {
-            background-color: #f0f0f0;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: rgb(65, 183, 204);
-        }
-        select, input[type="text"], textarea {
-            width: 100%;
-            padding: 10px;
-            font-size: medium;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            background-color: white;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: rgb(65, 183, 204);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: medium;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .submit-btn:hover {
-            background-color: rgb(55, 163, 184);
-        }
+      .query-form {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      .form-group {
+        margin-bottom: 25px;
+      }
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+      select,
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+      select:focus,
+      input[type="text"]:focus,
+      textarea:focus {
+        outline: none;
+        border-color: rgb(65, 183, 204);
+        box-shadow: 0 0 0 2px rgba(65, 183, 204, 0.2);
+      }
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+      .submit-btn {
+        display: block;
+        width: 100%;
+        padding: 14px;
+        background-color: rgb(65, 183, 204);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.1s ease;
+      }
+      .submit-btn:hover {
+        background-color: rgb(55, 163, 184);
+      }
+      .submit-btn:active {
+        transform: scale(0.98);
+      }
+      .form-title {
+        text-align: center;
+        color: rgb(65, 183, 204);
+        margin-bottom: 30px;
+        font-size: 28px;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="container">
-        <div class="upper-section">
-            <div class="circle circle1"></div>
-            <div class="circle circle2"></div>
-            <div class="menu-icon" onclick="toggleMenu()">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
-            </div>
-            <div class="close-icon" onclick="toggleMenu()"></div>
+      <div class="upper-section">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="menu-icon" onclick="toggleMenu()">
+          <div class="bar"></div>
+          <div class="bar"></div>
+          <div class="bar"></div>
         </div>
+        <div class="close-icon" onclick="toggleMenu()"></div>
+      </div>
 
-        <div class="lower-section">
-            <h1>Create Query</h1>
-            <form id="query-form" class="query-form">
-                <div class="form-group">
-                    <label for="department">Department:</label>
-                    <select id="department" required>
-                        <option value="">Select a department</option>
-                        <option value="Sanitation">Sanitation</option>
-                        <option value="Water Supply">Water Supply</option>
-                        <option value="Electricity">Electricity</option>
-                        <option value="Roads">Roads</option>
-                        <option value="Public Health">Public Health</option>
-                    </select>
-                </div>
+      <div class="lower-section">
+        <form id="query-form" class="query-form">
+          <h2 class="form-title">Create New Query</h2>
+          <div class="form-group">
+            <label for="department">Department:</label>
+            <select id="department" required>
+              <option value="" disabled selected>Select a department</option>
+              <option value="Sanitation">Sanitation</option>
+              <option value="Water Supply">Water Supply</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Roads">Roads</option>
+              <option value="Public Health">Public Health</option>
+            </select>
+          </div>
 
-                <div class="form-group">
-                    <label for="area">Area:</label>
-                    <input type="text" id="area" required>
-                </div>
+          <div class="form-group">
+            <label for="area">Area:</label>
+            <input
+              type="text"
+              id="area"
+              required
+              placeholder="Enter your area"
+            />
+          </div>
 
-                <div class="form-group">
-                    <label for="query">Query:</label>
-                    <textarea id="query" rows="5" required></textarea>
-                </div>
+          <div class="form-group">
+            <label for="query">Query:</label>
+            <textarea
+              id="query"
+              rows="5"
+              required
+              placeholder="Describe your query here..."
+            ></textarea>
+          </div>
 
-                <button type="submit" class="submit-btn">Submit Query</button>
-            </form>
-        </div>
+          <button type="submit" class="submit-btn">Submit Query</button>
+        </form>
+      </div>
     </div>
 
     <!-- Menu Content -->
     <div class="menu">
-        <ul>
-            <a href="dashboard.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
-            </a>
-            <a href="announcements.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
-            </a>
-            <a href="admin_queries.html" style="text-decoration: none;">
-                <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
-            </a>
-            <a style="text-decoration: none;" href="login.html">
-                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
-            </a>
-        </ul>
+      <ul>
+        <a href="dashboard.html" style="text-decoration: none">
+          <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+        </a>
+        <a href="announcements.html" style="text-decoration: none">
+          <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
+        </a>
+        <a href="admin_queries.html" style="text-decoration: none">
+          <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
+        </a>
+        <a style="text-decoration: none" href="login.html">
+          <li>
+            <i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout
+          </li>
+        </a>
+      </ul>
     </div>
 
     <script>
-        function toggleMenu() {
-            var menu = document.querySelector('.menu');
-            var closeIcon = document.querySelector('.close-icon');
-            menu.classList.toggle('active');
-            closeIcon.classList.toggle('active');
-        }
+      function toggleMenu() {
+        var menu = document.querySelector(".menu");
+        var closeIcon = document.querySelector(".close-icon");
+        menu.classList.toggle("active");
+        closeIcon.classList.toggle("active");
+      }
 
-        document.getElementById('query-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            submitQuery();
+      document
+        .getElementById("query-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          submitQuery();
         });
 
-        function submitQuery() {
-            const queryData = {
-                department: document.getElementById('department').value,
-                area: document.getElementById('area').value,
-                query: document.getElementById('query').value
-            };
+      function submitQuery() {
+        const queryData = {
+          department: document.getElementById("department").value,
+          area: document.getElementById("area").value,
+          query: document.getElementById("query").value,
+        };
 
-            console.log('Submitting query:', queryData);
-            console.log('Token:', localStorage.getItem('token'));
+        console.log("Submitting query:", queryData);
+        console.log("Token:", localStorage.getItem("token"));
 
-            fetch('https://lbaq-api.vercel.app/add_query', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(queryData)
-            })
-            .then(response => {
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
-                return response.text().then(text => {
-                    console.log('Raw response:', text);
-                    try {
-                        return JSON.parse(text);
-                    } catch (e) {
-                        console.error('Error parsing JSON:', e);
-                        throw new Error('Invalid JSON response from server');
-                    }
-                });
-            })
-            .then(data => {
-                console.log('Response data:', data);
-                if (data.error) {
-                    throw new Error(data.message || 'Server error');
-                }
-                alert('Query submitted successfully!');
-                window.location.href = 'dashboard.html';
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                if (error.message === 'Failed to fetch') {
-                    alert('Network error. Please check your internet connection and try again.');
-                } else if (error.message.includes('Unauthorized')) {
-                    alert('Your session has expired. Please log in again.');
-                    window.location.href = 'login.html';
-                } else {
-                    alert(`Failed to submit query: ${error.message}`);
-                }
+        fetch("https://lbaq-api.vercel.app/add_query", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify(queryData),
+        })
+          .then((response) => {
+            console.log("Response status:", response.status);
+            console.log("Response headers:", response.headers);
+            return response.text().then((text) => {
+              console.log("Raw response:", text);
+              try {
+                return JSON.parse(text);
+              } catch (e) {
+                console.error("Error parsing JSON:", e);
+                throw new Error("Invalid JSON response from server");
+              }
             });
-        }
+          })
+          .then((data) => {
+            console.log("Response data:", data);
+            if (data.error) {
+              throw new Error(data.message || "Server error");
+            }
+            alert("Query submitted successfully!");
+            window.location.href = "dashboard.html";
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            if (error.message === "Failed to fetch") {
+              alert(
+                "Network error. Please check your internet connection and try again."
+              );
+            } else if (error.message.includes("Unauthorized")) {
+              alert("Your session has expired. Please log in again.");
+              window.location.href = "login.html";
+            } else {
+              alert(`Failed to submit query: ${error.message}`);
+            }
+          });
+      }
     </script>
-</body>
+  </body>
 </html>
