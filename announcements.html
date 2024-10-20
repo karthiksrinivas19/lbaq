@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Announcements</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/common.css">
+    <style>
+        .announcement-item {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="upper-section">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <div class="close-icon" onclick="toggleMenu()"></div>
+        </div>
+        <div class="lower-section">
+            <h1>Announcements</h1>
+            <div id="announcements-list">
+                <!-- Announcements will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Content -->
+    <div class="menu">
+        <ul>
+            <a href="dashboard.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+            </a>
+            <a style="text-decoration: none;" href="query.html">
+                <li><i class="fa-solid fa-message"></i>&nbsp;&nbsp;Create Query</li>
+            </a>
+            <a href="admin_queries.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
+            </a>
+            <a style="text-decoration: none;" href="login.html">
+                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
+            </a>
+        </ul>
+    </div>
+
+    <script>
+        function loadAnnouncements() {
+            fetch('https://lbaq-api.vercel.app/get_area_announcements', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const announcementsList = document.getElementById('announcements-list');
+                announcementsList.innerHTML = '';
+                data.forEach(announcement => {
+                    const announcementElement = document.createElement('div');
+                    announcementElement.className = 'announcement-item';
+                    announcementElement.innerHTML = `
+                        <h2>${announcement.title}</h2>
+                        <p>${announcement.description}</p>
+                        <p>Area: ${announcement.area}</p>
+                    `;
+                    announcementsList.appendChild(announcementElement);
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load announcements. Please try again.');
+            });
+        }
+
+        function toggleMenu() {
+            var menu = document.querySelector('.menu');
+            var closeIcon = document.querySelector('.close-icon');
+            menu.classList.toggle('active');
+            closeIcon.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAnnouncements);
+    </script>
+</body>
+</html>

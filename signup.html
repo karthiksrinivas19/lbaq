@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: whitesmoke;
+            padding: 0;
+            overflow: hidden;
+            font-style: italic;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            margin-right: 100px;
+        }
+
+        h1 {
+            color: black;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-size: medium;
+        }
+
+        input {
+            width: 30%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid white;
+            border-radius: 15px;
+        }
+
+        input::placeholder {
+            color: rgb(155, 157, 158);
+            font-style: italic;
+        }
+
+        a {
+            color: rgb(22, 170, 197);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        img {
+            height: 25%;
+            margin-bottom: 10px;
+        }
+
+        .rounded-button {
+            background-color: rgb(22, 170, 197);
+            color: black;
+            border: 2px solid rgb(22, 170, 197);
+            border-radius: 3px;
+            padding: 15px;
+            padding-left: 150px;
+            padding-right: 150px;
+            font-size: 16px;
+            margin-top: 10px;
+            margin-right: 10px;
+        }
+
+        #signUpBtn {
+            margin-right: 0;
+            color: white;
+            font-style: italic;
+        }
+
+        #signUpBtn:hover {
+            cursor: pointer;
+            background-color: white;
+            color: black;
+        }
+
+        p {
+            color: black;
+            margin-top: 0px;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .circle1 {
+            top: -8%;
+            left: 0%;
+        }
+
+        .circle2 {
+            top: 3%;
+            left: -4%;
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                margin-right: 50px;
+                position: absolute;
+                top: -50px;
+            }
+
+            input {
+                width: 50%;
+            }
+
+            .rounded-button {
+                margin-right: 10px;
+                padding: 10px;
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+
+            .circle1 {
+                top: -6%;
+                left: -2%;
+            }
+
+            .circle2 {
+                top: 2%;
+                left: -15%;
+            }
+        }
+
+        select {
+            width: 30%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid white;
+            border-radius: 15px;
+            background-color: white;
+            color: rgb(155, 157, 158);
+            font-style: italic;
+        }
+
+        @media (max-width: 767px) {
+            select {
+                width: 50%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="container">
+        <h1>Welcome Onboard</h1>
+        <input type="text" id="name" placeholder="Enter your Name">
+        <input type="text" id="aadhaar" placeholder="Enter your Aadhar Number">
+        <input type="email" id="email" placeholder="Enter your email">
+        <input type="password" id="password" placeholder="Enter Password">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password">
+        <select id="area">
+            <option value="" disabled selected>Select your Area</option>
+            <option value="Downtown">Downtown</option>
+            <option value="Uptown">Uptown</option>
+            <option value="Midtown">Midtown</option>
+            <option value="Suburb A">Suburb A</option>
+            <option value="Suburb B">Suburb B</option>
+            <option value="Industrial Zone">Industrial Zone</option>
+            <option value="Commercial District">Commercial District</option>
+            <option value="Residential Area">Residential Area</option>
+        </select>
+        <button id="signUpBtn" class="rounded-button" style="font-style: italic;" onclick="registerUser()">Register</button>
+        <p style="font-style: italic;">Already have an account? <a href="login.html">Login</a></p>
+    </div>
+
+    <script>
+        function registerUser() {
+            const name = document.getElementById('name').value;
+            const aadhaar = document.getElementById('aadhaar').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const area = document.getElementById('area').value;
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            if (!name || !aadhaar || !email || !password || !area) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const userData = {
+                name: name,
+                email: email,
+                password: password,
+                aadhaar: aadhaar,
+                area: area
+            };
+
+            fetch('https://lbaq-api.vercel.app/users/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.message);
+                } else {
+                    alert('Registration successful!');
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Registration failed. Please try again.');
+            });
+        }
+    </script>
+</body>
+
+</html>

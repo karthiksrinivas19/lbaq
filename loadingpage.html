@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading</title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+            background-color: white;
+            padding: 0;
+            overflow-x: hidden;
+            font-style: italic;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            margin-right: 500px;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #3498db;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite; /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% { -webkit-transform: rotate(0deg); }
+            100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .header {
+            text-align: center;
+            color: #007f7f;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .circle1 {
+            top: -8%;
+            left: 0%;
+        }
+
+        .circle2 {
+            top: 3%;
+            left: -4%;
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                margin-right: 50px;
+                position: absolute;
+                top: -190px;
+            }
+
+            .loader {
+                width: 80px;
+                height: 80px;
+                border-width: 8px;
+            }
+
+            .circle1 {
+                top: -6%;
+                left: -2%;
+            }
+
+            .circle2 {
+                top: 2%;
+                left: -15%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="container">
+        <div id="loaderContainer" class="loader"></div>
+        <div class="header">Government of India</div>
+        <div class="welcome-message">
+            Welcome to the Local Body Awareness and Query System
+        </div>
+    </div>
+
+    <script>
+        setTimeout(function() {
+            window.location.href = 'dashboard.html';
+        }, 4000);
+    </script>
+</body>
+
+</html>
+

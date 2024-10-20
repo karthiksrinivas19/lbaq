@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Answer Query</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/common.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="upper-section">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <!-- Close icon -->
+            <div class="close-icon" onclick="toggleMenu()"></div>
+        </div>
+
+        <div class="lower-section">
+            <h1>Answer Query</h1>
+            <div>
+                <label for="query">Query:</label>
+                <p id="query">Loading query...</p>
+            </div>
+
+            <div>
+                <label for="reply">Your Reply:</label>
+                <textarea id="reply" rows="5" required></textarea>
+            </div>
+
+            <input type="button" value="Submit Reply" onclick="submitReply()">
+        </div>
+    </div>
+
+    <!-- Menu Content -->
+    <div class="menu">
+        <ul>
+            <a href="dashboard.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+            </a>
+            <a style="text-decoration: none;" href="query.html">
+                <li><i class="fa-solid fa-message"></i>&nbsp;&nbsp;Create Query</li>
+            </a>
+            <a href="announcements.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
+            </a>
+            <a href="admin_queries.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
+            </a>
+            <a style="text-decoration: none;" href="login.html">
+                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
+            </a>
+        </ul>
+    </div>
+
+    <script>
+        // Assuming the query ID is passed via query parameters
+        const queryId = new URLSearchParams(window.location.search).get('query_id');
+        
+        function loadQuery() {
+            fetch(`https://lbaq-api.vercel.app/get_query/${queryId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.message);
+                } else {
+                    document.getElementById('query').textContent = data.query;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load query.');
+            });
+        }
+
+        function submitReply() {
+            const replyText = document.getElementById('reply').value;
+
+            if (!replyText) {
+                alert('Please enter a reply.');
+                return;
+            }
+
+            const replyData = {
+                reply: replyText
+            };
+
+            fetch(`https://lbaq-api.vercel.app/add_reply/${queryId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(replyData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.message);
+                } else {
+                    alert('Reply submitted successfully!');
+                    window.location.href = 'dashboard.html';  // Redirect after reply submission
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to submit reply.');
+            });
+        }
+
+        // Load query when the page is ready
+        document.addEventListener('DOMContentLoaded', loadQuery);
+
+        function toggleMenu() {
+            var menu = document.querySelector('.menu');
+            var closeIcon = document.querySelector('.close-icon');
+            menu.classList.toggle('active');
+            closeIcon.classList.toggle('active');
+        }
+    </script>
+
+</body>
+
+</html>

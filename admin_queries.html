@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Queries</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/common.css">
+    <style>
+        .query-list {
+            margin-top: 20px;
+        }
+        .query-item {
+            background-color: #f0f0f0;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .query-item:hover {
+            background-color: #e0e0e0;
+        }
+        .filter-section {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        button {
+            background-color: rgb(65, 183, 204);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: rgb(55, 163, 184);
+        }
+        .no-queries {
+            text-align: center;
+            color: #666;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="upper-section">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <div class="close-icon" onclick="toggleMenu()"></div>
+        </div>
+
+        <div class="lower-section">
+            <h1>Admin Queries</h1>
+            <div class="filter-section">
+                <select id="department-filter">
+                    <option value="">All Departments</option>
+                    <option value="Sanitation">Sanitation</option>
+                    <option value="Water Supply">Water Supply</option>
+                    <option value="Electricity">Electricity</option>
+                    <option value="Roads">Roads</option>
+                    <option value="Public Health">Public Health</option>
+                </select>
+                <select id="area-filter">
+                    <option value="">All Areas</option>
+                    <option value="Downtown">Downtown</option>
+                    <option value="Uptown">Uptown</option>
+                    <option value="Midtown">Midtown</option>
+                    <option value="Suburb A">Suburb A</option>
+                    <option value="Suburb B">Suburb B</option>
+                    <option value="Industrial Zone">Industrial Zone</option>
+                    <option value="Commercial District">Commercial District</option>
+                    <option value="Residential Area">Residential Area</option>
+                </select>
+                <button onclick="applyFilters()">Apply Filters</button>
+            </div>
+            <div id="query-list" class="query-list">
+                <!-- Queries will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Content -->
+    <div class="menu">
+        <ul>
+            <a href="dashboard.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+            </a>
+            <a style="text-decoration: none;" href="query.html">
+                <li><i class="fa-solid fa-message"></i>&nbsp;&nbsp;Create Query</li>
+            </a>
+            <a href="announcements.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
+            </a>
+            <a style="text-decoration: none;" href="login.html">
+                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
+            </a>
+        </ul>
+    </div>
+
+    <script>
+        let allQueries = [];
+
+        function loadQueries() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You are not logged in. Please log in to view queries.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            fetch('https://lbaq-api.vercel.app/get_queries', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`HTTP error! status: ${response.status}, message: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Fetched queries:', data);
+                allQueries = data;
+                displayQueries(allQueries);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                let errorMessage = 'Error loading queries. ';
+                if (error.message.includes('ObjectId is not JSON serializable')) {
+                    errorMessage += 'There is a server-side issue with data serialization. Please contact the administrator.';
+                } else {
+                    errorMessage += error.message;
+                }
+                document.getElementById('query-list').innerHTML = `<p class="no-queries">${errorMessage}</p>`;
+            });
+        }
+
+        function displayQueries(queries) {
+            const queryList = document.getElementById('query-list');
+            queryList.innerHTML = '';
+            if (!Array.isArray(queries) || queries.length === 0) {
+                queryList.innerHTML = '<p class="no-queries">No queries found.</p>';
+                return;
+            }
+            queries.forEach(query => {
+                const queryElement = document.createElement('div');
+                queryElement.className = 'query-item';
+                queryElement.innerHTML = `
+                    <h3>${query.department || 'N/A'} - ${query.area || 'N/A'}</h3>
+                    <p>${query.query || 'No query text'}</p>
+                    <p><small>Status: ${query.status || 'Pending'}</small></p>
+                `;
+                queryElement.onclick = () => answerQuery(query.id);
+                queryList.appendChild(queryElement);
+            });
+        }
+
+        function applyFilters() {
+            const department = document.getElementById('department-filter').value;
+            const area = document.getElementById('area-filter').value;
+
+            const filteredQueries = allQueries.filter(query => 
+                (!department || query.department === department) &&
+                (!area || query.area === area)
+            );
+
+            displayQueries(filteredQueries);
+        }
+
+        function answerQuery(queryId) {
+            window.location.href = `answerquery.html?query_id=${queryId}`;
+        }
+
+        function toggleMenu() {
+            var menu = document.querySelector('.menu');
+            var closeIcon = document.querySelector('.close-icon');
+            menu.classList.toggle('active');
+            closeIcon.classList.toggle('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadQueries);
+    </script>
+</body>
+
+</html>

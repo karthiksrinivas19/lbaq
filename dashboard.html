@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/2460ed1eda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles/common.css">
+    <style>
+        .dashboard-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .dashboard-link {
+            text-decoration: none;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .dashboard-link:hover {
+            background-color: #e0e0e0;
+        }
+        .dashboard-link i {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .profile-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .profile-img img {
+            width: 100px; 
+            height: 100px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="upper-section">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="menu-icon" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <div class="close-icon" onclick="toggleMenu()"></div>
+            <div class="profile-img">
+                <img src="https://via.placeholder.com/100" alt="Profile Picture">
+            </div>
+        </div>
+
+        <div class="lower-section">
+            <h1>Dashboard</h1>
+            <div class="dashboard-links">
+                <a href="query.html" class="dashboard-link">
+                    <i class="fa-solid fa-message"></i>
+                    <span>Create Query</span>
+                </a>
+                <a href="admin_queries.html" class="dashboard-link">
+                    <i class="fa-solid fa-list-alt"></i>
+                    <span>Admin Queries</span>
+                </a>
+                <a href="announcements.html" class="dashboard-link">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <span>Announcements</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Content -->
+    <div class="menu">
+        <ul>
+            <a href="dashboard.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-house"></i>&nbsp;&nbsp;Dashboard</li>
+            </a>
+            <a style="text-decoration: none;" href="query.html">
+                <li><i class="fa-solid fa-message"></i>&nbsp;&nbsp;Create Query</li>
+            </a>
+            <a href="announcements.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-bullhorn"></i>&nbsp;&nbsp;Announcements</li>
+            </a>
+            <a href="admin_queries.html" style="text-decoration: none;">
+                <li><i class="fa-solid fa-list-alt"></i>&nbsp;&nbsp;Admin Queries</li>
+            </a>
+            <a style="text-decoration: none;" href="login.html">
+                <li><i class="fa-solid fa-right-from-bracket"></i>&nbsp;&nbsp;Logout</li>
+            </a>
+        </ul>
+    </div>
+
+    <script>
+        function toggleMenu() {
+            var menu = document.querySelector('.menu');
+            var closeIcon = document.querySelector('.close-icon');
+            menu.classList.toggle('active');
+            closeIcon.classList.toggle('active');
+        }
+
+        // Add this function to load user data
+        function loadUserData() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            fetch('https://lbaq-api.vercel.app/users/profile', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    throw new Error(data.message);
+                }
+                // Update the dashboard with user data
+                document.querySelector('h1').textContent = `Welcome, ${data.name}`;
+                // You can add more user data to the dashboard as needed
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to load user data. Please log in again.');
+                window.location.href = 'login.html';
+            });
+        }
+
+        // Call loadUserData when the page loads
+        document.addEventListener('DOMContentLoaded', loadUserData);
+    </script>
+</body>
+</html>

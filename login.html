@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            background-color: whitesmoke;
+            padding: 0;
+            overflow-x: hidden;
+            font-style: italic;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            margin-right: 500px;
+        }
+
+        h1 {
+            color: black;
+            margin-bottom: 20px;
+            font-style: italic;
+            font-size: medium;
+        }
+
+        img {
+            height: 25%;
+            margin-bottom: 40px;
+        }
+
+        input {
+            width: 30%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid white;
+            border-radius: 15px;
+        }
+
+        input::placeholder {
+            color: rgb(155, 157, 158);
+            font-style: italic;
+        }
+
+        a {
+            color: rgb(22, 170, 197);
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .rect-button {
+            background-color: rgb(22, 170, 197);
+            color: black;
+            border: 2px solid rgb(22, 170, 197);
+            border-radius: 3px;
+            padding: 15px;
+            padding-left: 150px;
+            padding-right: 150px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #loginBtn {
+            margin-right: 0;
+        }
+
+        #loginBtn:hover {
+            cursor: pointer;
+            background-color: white;
+            color: black;
+        }
+
+        p {
+            color: black;
+        }
+
+        .circle {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background-color: rgba(0, 255, 255, 0.5);
+        }
+
+        .circle1 {
+            top: -8%;
+            left: 0%;
+        }
+
+        .circle2 {
+            top: 3%;
+            left: -4%;
+        }
+
+        @media (max-width: 767px) {
+            .container {
+                margin-right: 50px;
+                position: absolute;
+                top: -50px;
+            }
+
+            input {
+                width: 50%;
+            }
+
+            .rect-button {
+                margin-right: 10px;
+                padding: 10px;
+                padding-left: 50px;
+                padding-right: 50px;
+            }
+
+            img {
+                height: 10%;
+            }
+
+            .circle1 {
+                top: -6%;
+                left: -2%;
+            }
+
+            .circle2 {
+                top: 2%;
+                left: -15%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="container">
+        <h1> Welcome Back</h1>
+        <img src="./images/firstpage.svg" alt="Character Image">
+        <input type="email" id="email" placeholder="Email">
+        <input type="password" id="password" placeholder="Password">
+        <a href="#" style="font-style: italic;">Forgot Password?</a>
+        <button id="loginBtn" class="rect-button" style="font-style: italic;" onclick="loginUser()">Login</button>
+        <p style="font-style: italic;">Don't have an account? <a href="signup.html">signup</a></p>
+    </div>
+
+    <script>
+        function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const loginData = {
+                email: email,
+                password: password
+            };
+
+            fetch('https://lbaq-api.vercel.app/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.message);
+                } else {
+                    alert('Login successful!');
+                    // You can store the JWT token in localStorage or sessionStorage
+                    localStorage.setItem('token', data.token);
+                    window.location.href = 'loadingpage.html'; // Redirect after successful login
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Login failed. Please try again.');
+            });
+        }
+    </script>
+</body>
+
+</html>
